@@ -1,7 +1,7 @@
 "use client";
 
 import PayerInfo from "@/components/PayerInfo";
-import BillingInfo from "@/components/bplsbilling/Main";
+import BillingInfo from "@/components/BplsBilling";
 import Image from "next/image";
 import { Form } from "react-final-form";
 
