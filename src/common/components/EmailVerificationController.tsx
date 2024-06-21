@@ -2,10 +2,6 @@ import { lookupService } from "@/common/lib/client";
 import React, { useState } from "react";
 import { usePartnerContext } from "./PartnerModel";
 
-const defaultSuccessHandler = () => {
-  console.log("invoking default success handler");
-};
-
 const useEmailVerification = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -21,7 +17,6 @@ const useEmailVerification = () => {
   const { channelId } = usePartnerContext();
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = React.useState(false);
-  const [onSuccess, setOnSuccess] = useState(defaultSuccessHandler);
   const [connection, setConnection] = useState<string | undefined>();
   const svc = lookupService("OTPService");
 
@@ -69,30 +64,27 @@ const useEmailVerification = () => {
     setShowEmailValidation(!isValidEmail);
   };
 
-  const handleNextClickStep1 = async () => {
+  const handleEmailClick = async () => {
     setLoading(true);
     if (emailAddress.trim() === "") {
       setShowEmailValidation(true);
       setLoading(false);
       return;
     } else {
-      console.log("set connection is ", connection);
       let conn = connection !== null ? connection : "epayment";
       conn = conn === undefined ? "epayment" : conn;
-      console.log("conn is ", conn, ", partnerid is ", channelId);
       const otp = await svc?.invoke("generateOtp", {
         partnerid: channelId,
         contact: { email: emailAddress },
         connection: conn,
       });
-      console.log("otp", otp);
       setKey(otp.key);
       setCurrentStep(2);
       setLoading(false);
     }
     setLoading(false);
   };
-  const handleNextClickStep2 = async (onSuccess: any) => {
+  const handleOtpClick = async (onSuccess: any) => {
     setLoading(true);
     if (otp.trim().length !== 6) {
       setShowInvalidKey(true);
@@ -188,12 +180,11 @@ const useEmailVerification = () => {
     handleOTPChange,
     handleEmailFocus,
     handleEmailBlur,
-    handleNextClickStep1,
-    handleNextClickStep2,
+    handleEmailClick,
+    handleOtpClick,
     handleBackClick,
     handleResendOTP,
     setConnection,
-    setOnSuccess,
   };
 };
 

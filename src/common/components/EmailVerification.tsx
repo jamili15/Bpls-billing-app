@@ -59,8 +59,8 @@ const EmailVerification: React.FC<EmailVerificationUiProps> = ({
     handleOTPChange,
     handleEmailFocus,
     handleEmailBlur,
-    handleNextClickStep1,
-    handleNextClickStep2,
+    handleEmailClick,
+    handleOtpClick,
     handleBackClick,
     handleClickOpen,
     handleClose,
@@ -73,7 +73,7 @@ const EmailVerification: React.FC<EmailVerificationUiProps> = ({
   }, []);
 
   const handleClick = () => {
-    handleNextClickStep2(onSuccess);
+    handleOtpClick(onSuccess);
   };
 
   let descriptionText = "";
@@ -234,9 +234,7 @@ const EmailVerification: React.FC<EmailVerificationUiProps> = ({
                   </Button>
                   <LoadingButton
                     size="medium"
-                    onClick={
-                      currentStep === 1 ? handleNextClickStep1 : handleClick
-                    }
+                    onClick={currentStep === 1 ? handleEmailClick : handleClick}
                     endIcon={
                       <SendIcon
                         className={`${
