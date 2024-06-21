@@ -5,6 +5,7 @@ import { Field } from "react-final-form";
 interface RefAccountProps {
   value?: string;
   onChange: (value: string) => void;
+  onBlur: () => void;
   error?: boolean | string | null;
   helperText?: React.ReactNode;
 }
@@ -12,6 +13,7 @@ interface RefAccountProps {
 const RefAccount: React.FC<RefAccountProps> = ({
   value,
   onChange,
+  onBlur,
   error,
   helperText,
 }) => {
@@ -23,8 +25,9 @@ const RefAccount: React.FC<RefAccountProps> = ({
           {...input}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
           id="accountNo"
-          label="Account No."
+          label="BIN or Application No."
           variant="standard"
           className="!w-full"
           required

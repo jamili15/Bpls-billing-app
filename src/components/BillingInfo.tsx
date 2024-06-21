@@ -9,44 +9,43 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Currency from "./ui/Currency";
 import Paper from "@mui/material/Paper";
-import BillingInfoController from "./BplsBillingController";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Dropdown from "./ui/Dropdown";
-import { lookupService } from "@/common/lib/client";
-import Bill from "@/model/Bill";
 import BillItem from "@/model/BillItem";
+import { useBillingContext } from "@/components/BplsContextController";
 
 interface BillProps {
   refno: string;
 }
 
 const BillingInfo: React.FC<BillProps> = ({ refno }) => {
-  const { open, options, qtr, handleOpen, handleClose, handlePayOptionChange } =
-    BillingInfoController();
-  const svc = lookupService("BusinessBilling");
-  const [bill, setBill] = useState<Bill>();
+  const {
+    open,
+    loading,
+    options,
+    qtr,
+    bill,
+    handleOpen,
+    handlePayOptionChange,
+    handleClose,
+  } = useBillingContext();
 
-  const totalAmountDue = [{ remarks: "Bill Amount ", amountdue: "amount" }];
+  console.log("qtr", qtr, "bill amount", bill?.amount);
 
-  const loadData = async () => {
-    try {
-      const res = await svc?.invoke("getBilling", {
-        refno: refno,
-        qtr: qtr,
-        showdetails: true,
-      });
-      setBill(new Bill(res));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, [qtr]);
+  if (loading || !bill) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="flex space-x-2">
+          <div className="w-5 h-5 bg-gray-100 rounded-full animate-bounce1"></div>
+          <div className="w-5 h-5 bg-gray-100 rounded-full animate-bounce2"></div>
+          <div className="w-5 h-5 bg-gray-100 rounded-full animate-bounce3"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -69,13 +68,13 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
         </div>
         <div className="grid grid-rows-7 gap-2 indent-40">
           {[
-            bill?.appno,
-            bill?.apptype,
-            bill?.appdate,
-            bill?.bin,
-            bill?.tradename,
-            bill?.ownername,
-            bill?.address,
+            bill.appno,
+            bill.apptype,
+            bill.appdate,
+            bill.bin,
+            bill.tradename,
+            bill.ownername,
+            bill.address,
             `${
               qtr === 1 ? "1st" : qtr === 2 ? "2nd" : qtr === 3 ? "3rd" : "4th"
             } Quarter`,
@@ -87,7 +86,7 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
       <div className="flex flex-col gap-2">
         <div>
           <Button
-            className="shadow-md border border-[#335f96]"
+            className="shadow-md border border-[#335f96] mt-5"
             variant="contained"
             size="small"
             onClick={handleOpen}
@@ -119,7 +118,7 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bill?.items.map((items: BillItem, index: any) => (
+              {bill.items.map((items: BillItem, index: any) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -147,8 +146,8 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
           </Table>
         </TableContainer>
         <Modal open={open} onClose={handleClose}>
-          <Box className="fixed flex flex-col items-center justify-center top-1/2 left-1/2 w-64 h-52 bg-white shadow-xl p-4 transform -translate-x-1/2 -translate-y-1/2 rounded-sm ">
-            <Typography variant="h6" component="h2">
+          <Box className="fixed flex flex-col items-center justify-start top-1/2 left-1/2 w-64 h-52 bg-white shadow-xl p-4 transform -translate-x-1/2 -translate-y-1/2 rounded-sm ">
+            <Typography variant="h6" component="h2" className="pb-5">
               Pay Options
             </Typography>
             <Dropdown
@@ -159,17 +158,12 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
           </Box>
         </Modal>
         <div className="pr-5 pt-2">
-          {totalAmountDue.map((row: any, index: number) => (
-            <div
-              key={`${index}`}
-              className="flex justify-end items-center gap-5"
-            >
-              <div className="font-bold uppercase">{row.remarks}</div>
-              <div className="font-bold">
-                <Currency currency="Php" amount={bill?.amount ?? 0} />
-              </div>
+          <div className="flex justify-end items-center gap-5">
+            <div className="font-bold uppercase">Bill Amount</div>
+            <div className="font-bold">
+              <Currency currency="Php" amount={bill.amount ?? 0} />
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>

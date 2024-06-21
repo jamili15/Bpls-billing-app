@@ -13,7 +13,6 @@ class Bill {
   tradename: string;
   txntype: string;
   txnttypename: string;
-  qtr: number | string | void;
   items: BillItem[];
 
   public constructor(data: any) {
@@ -30,7 +29,6 @@ class Bill {
     this.tradename = data?.info.tradename;
     this.txntype = data?.info.txntype;
     this.txnttypename = data?.info.txntypename;
-    this.qtr = data?.qtr;
     this.items = (info.items || []).map((item: any) => new BillItem(item));
   }
 }

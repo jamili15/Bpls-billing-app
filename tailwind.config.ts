@@ -14,6 +14,17 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      keyframes: {
+        bounceWave: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-1rem)" },
+        },
+      },
+      animation: {
+        bounce1: "bounceWave 1s infinite",
+        bounce2: "bounceWave 1s infinite 0.2s",
+        bounce3: "bounceWave 1s infinite 0.4s",
+      },
     },
   },
   plugins: [],

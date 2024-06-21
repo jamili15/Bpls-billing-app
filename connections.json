@@ -16,5 +16,12 @@
     "app.context": "partner",
     "handler": "script",
     "readTimeout": 60000
+  },
+  "main": {
+    "app.host": "${NEXT_PUBLIC_ETRACS_SERVER_IP}:8070",
+    "app.cluster": "osiris3",
+    "app.context": "etracs25",
+    "handler": "script",
+    "readTimeout": 60000
   }
 }
