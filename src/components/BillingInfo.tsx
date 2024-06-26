@@ -24,7 +24,6 @@ interface BillProps {
 const BillingInfo: React.FC<BillProps> = ({ refno }) => {
   const {
     open,
-    loading,
     options,
     qtr,
     bill,
@@ -32,20 +31,6 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
     handlePayOptionChange,
     handleClose,
   } = useBillingContext();
-
-  console.log("qtr", qtr, "bill amount", bill?.amount);
-
-  if (loading || !bill) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div className="flex space-x-2">
-          <div className="w-5 h-5 bg-gray-100 rounded-full animate-bounce1"></div>
-          <div className="w-5 h-5 bg-gray-100 rounded-full animate-bounce2"></div>
-          <div className="w-5 h-5 bg-gray-100 rounded-full animate-bounce3"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -68,13 +53,13 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
         </div>
         <div className="grid grid-rows-7 gap-2 indent-40">
           {[
-            bill.appno,
-            bill.apptype,
-            bill.appdate,
-            bill.bin,
-            bill.tradename,
-            bill.ownername,
-            bill.address,
+            bill?.appno,
+            bill?.apptype,
+            bill?.appdate,
+            bill?.bin,
+            bill?.tradename,
+            bill?.ownername,
+            bill?.address,
             `${
               qtr === 1 ? "1st" : qtr === 2 ? "2nd" : qtr === 3 ? "3rd" : "4th"
             } Quarter`,
@@ -118,7 +103,7 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bill.items.map((items: BillItem, index: any) => (
+              {bill?.items.map((items: BillItem, index: any) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -161,7 +146,7 @@ const BillingInfo: React.FC<BillProps> = ({ refno }) => {
           <div className="flex justify-end items-center gap-5">
             <div className="font-bold uppercase">Bill Amount</div>
             <div className="font-bold">
-              <Currency currency="Php" amount={bill.amount ?? 0} />
+              <Currency currency="Php" amount={bill?.amount ?? 0} />
             </div>
           </div>
         </div>

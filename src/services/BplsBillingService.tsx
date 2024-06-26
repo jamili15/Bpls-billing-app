@@ -11,19 +11,26 @@ export const getBilling = async ({
   qtr?: number;
   showdetails?: boolean;
 }) => {
-  const svc = Service.lookup(
-    `${partnerid}:OnlineBusinessBillingService`,
-    "etracs"
-  );
+  try {
+    const svc = Service.lookup(
+      `${partnerid}:OnlineBusinessBillingService`,
+      "etracs"
+    );
 
-  const bill = await svc.invoke("getBilling", {
-    refno,
-    qtr,
-    showdetails,
-  });
+    const bill = await svc.invoke("getBilling", {
+      refno,
+      qtr,
+      showdetails,
+    });
 
-  if (bill.status === "ERROR") {
-    return { code: "01", error: bill.msg };
+    if (bill.status === "ERROR") {
+      return { code: "01", error: bill.msg };
+    }
+    return bill;
+  } catch (err) {
+    return {
+      code: "01",
+      error: err,
+    };
   }
-  return bill;
 };

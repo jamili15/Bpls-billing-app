@@ -71,7 +71,7 @@ const BplsBilling: React.FC<BillInfoProps> = ({
           onSubmit={() => {}}
           render={({ handleSubmit }) => (
             <form
-              className="flex flex-col items-start justify-start gap-10"
+              className="flex flex-col items-start justify-start gap-8"
               onSubmit={handleSubmit}
             >
               {step === "refno" && (

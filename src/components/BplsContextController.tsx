@@ -23,6 +23,8 @@ interface BillingInfoContext {
   setLoading: (value: boolean) => void;
   setStep: (value: string) => void;
   setBill: (value: Bill | null) => void;
+  setOpen: (value: boolean) => void;
+  setQtr: (value: number | string | null) => void;
   handleClose: () => void;
   handleOpen: () => void;
   handleNext: () => Promise<void>;
@@ -87,20 +89,19 @@ export const BillingInfoProvider = ({ children }: { children: ReactNode }) => {
         qtr: qtr,
         showdetails: true,
       });
-      console.log("Billing info fetched", res);
-      if (res === undefined) {
-        setErrorMessage(`Cannot find business application ${refno}`);
+      if (!res || res.error) {
+        setErrorMessage(res.error);
         setError(true);
       } else {
         setBill(new Bill(res));
         setStep("billinfo");
       }
+      console.log("RES", res);
     } catch (error) {
       setErrorMessage(
         "Partner is currently not available. Please try again later."
       );
       setError(true);
-      console.log("error", error);
     } finally {
       setLoading(false);
     }
@@ -152,6 +153,8 @@ export const BillingInfoProvider = ({ children }: { children: ReactNode }) => {
         setValidate,
         setLoading,
         setStep,
+        setQtr,
+        setOpen,
         setBill,
         handleClose,
         handleOpen,
