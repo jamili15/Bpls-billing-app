@@ -22,15 +22,14 @@ export const getBilling = async ({
       qtr,
       showdetails,
     });
-
     if (bill.status === "ERROR") {
       return { code: "01", error: bill.msg };
     }
     return bill;
-  } catch (err) {
+  } catch (error) {
     return {
       code: "01",
-      error: err,
+      error: error,
     };
   }
 };
