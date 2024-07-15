@@ -34,7 +34,7 @@ const PayerInfo = (props: any) => {
       payOption: { objid: "PAYMAYA" },
       paidby: props.formValues.payername,
       paidbyaddress: props.formValues.payeraddress,
-      email: "props.formValues.email",
+      email: props.formValues.email,
       mobileno: props.formValues.phone,
       items: bill?.items,
       info: {
