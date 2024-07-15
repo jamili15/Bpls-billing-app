@@ -1,4 +1,5 @@
 import Service from "@/common/lib/server/remote-service";
+import { Bill } from "@/types";
 
 export const getBilling = async ({
   partnerid,
@@ -22,10 +23,17 @@ export const getBilling = async ({
       qtr,
       showdetails,
     });
+
+    const data: Bill = {
+      ...bill.info,
+      particulars: `Business Identification Number (BIN) ${bill?.info.bin}`,
+      qtr: qtr,
+    };
+
     if (bill.status === "ERROR") {
       return { code: "01", error: bill.msg };
     }
-    return bill;
+    return data;
   } catch (error) {
     return {
       code: "01",

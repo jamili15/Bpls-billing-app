@@ -24,10 +24,8 @@ const RefAccount = (props: any) => {
       const bill: Bill = await svc?.invoke("getBilling", {
         partnerid: partner?.channelid,
         refno: props.formValues.bin,
-        qtr: 4,
         showdetails: true,
       });
-      console.log("RES", bill);
       if (!bill || bill.error) {
         setError(bill.error);
       } else {

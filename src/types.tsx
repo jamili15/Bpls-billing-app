@@ -1,22 +1,20 @@
 export type Bill = {
-  info: {
-    ownername: string;
-    tradename: string;
-    address: string;
-    appno: string;
-    bin: string;
-    appdate: string;
-    apptype: string;
-    expirydate: string;
-    email: string;
-    mobileno: string | null;
-    amount: number;
-    txntype: string;
-    txntypename: string;
-    qtr: string;
-    items: BillItem[];
-  };
+  ownername: string;
+  tradename: string;
+  address: string;
+  appno: string;
+  bin: string;
+  appdate: string;
+  apptype: string;
+  expirydate: string;
+  email: string;
+  mobileno: string | null;
   amount: number;
+  txntype: string;
+  txntypename: string;
+  qtr: string;
+  particulars: string;
+  items: BillItem[];
   error: string;
 };
 

@@ -1,20 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Currency from "./ui/Currency";
-import Paper from "@mui/material/Paper";
+import Table, { Column } from "@/components/ui/Table";
 import { Button } from "@/common/io/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Bill, BillItem } from "@/types";
-
+import { Bill } from "@/types";
 import { lookupService } from "@/common/lib/client";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
@@ -24,9 +16,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { usePartnerContext } from "@/common/components/Email/PartnerModel";
 import Card from "@/common/ui/Card";
 import { ActionBar } from "@/common/ui/ActionBar";
+import Title from "@/common/io/Title";
 
 const BillingInfo = (props: any) => {
-  const bill = props.formValues.bill;
+  const bill: Bill = props.formValues.bill;
   const [qtr, setQtr] = React.useState<number | undefined>(4);
   const [showQtr, setShowQtr] = React.useState<number | undefined>(qtr);
   const { partner } = usePartnerContext();
@@ -45,7 +38,7 @@ const BillingInfo = (props: any) => {
 
   const handleSubmit = async () => {
     setLoading(true);
-    const refno = bill?.info.bin || bill?.info.appno;
+    const refno = bill?.bin || bill?.appno;
     try {
       const res: Bill = await svc?.invoke("getBilling", {
         partnerid: partner?.channelid,
@@ -53,7 +46,7 @@ const BillingInfo = (props: any) => {
         qtr: qtr,
         showdetails: true,
       });
-      console.log("RES \n\n\n ===>", res);
+
       if (!res || res.error) {
         setError(res.error);
         setOpen(false);
@@ -79,6 +72,23 @@ const BillingInfo = (props: any) => {
     billQtr.push(1, 2, 3, 4);
   }
 
+  const columns: Column[] = [
+    {
+      label: "Particulars",
+      field: "account-lobname",
+      align: "left",
+      render: (item) => (
+        <p>
+          {item.lobname} - {item.account}
+        </p>
+      ),
+    },
+    { label: "Amount", field: "amount", align: "right" },
+    { label: "Surcharge", field: "surcharge", align: "right" },
+    { label: "Interest", field: "interest", align: "right" },
+    { label: "Total", field: "total", align: "right" },
+  ];
+
   return (
     <Card title={props.title} subTitleText={props.page.caption} error={error}>
       <div className="flex justify-start items-center">
@@ -100,13 +110,13 @@ const BillingInfo = (props: any) => {
         </div>
         <div className="grid grid-rows-7 gap-2 indent-40">
           {[
-            bill?.info.appno,
-            bill?.info.apptype,
-            bill?.info.appdate,
-            bill?.info.bin,
-            bill?.info.tradename,
-            bill?.info.ownername,
-            bill?.info.address,
+            bill?.appno,
+            bill?.apptype,
+            bill?.appdate,
+            bill?.bin,
+            bill?.tradename,
+            bill?.ownername,
+            bill?.address,
             `${
               showQtr === 1
                 ? "1st"
@@ -122,67 +132,20 @@ const BillingInfo = (props: any) => {
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <div>
-          <Button
-            className="!border border-solid shadow-sm  bg-transparent text-[#6200ee] hover:bg-[#6200ee12] hover:shadow-md mt-5"
-            variant="contained"
-            size="small"
-            onClick={handleOpen}
-          >
-            Pay option
-          </Button>
-        </div>
-        <h1 className="text-center">Billing Summary</h1>
-        <TableContainer
-          component={Paper}
-          className="max-h-[500px] !h-[360px] overflow-auto"
+        <Button
+          className="!border border-solid shadow-sm  bg-transparent text-[#6200ee] hover:bg-[#6200ee12] hover:shadow-md mt-6 w-[17%]"
+          variant="contained"
+          size="small"
+          onClick={handleOpen}
         >
-          <Table sx={{ minWidth: 600 }} aria-label="simple table">
-            <TableHead className="sticky top-0 bg-white shadow-sm">
-              <TableRow className="uppercase">
-                <TableCell className="font-bold">Particulars</TableCell>
-                <TableCell align="right" className="font-bold">
-                  Amount
-                </TableCell>
-                <TableCell align="right" className="font-bold">
-                  Surcharge
-                </TableCell>
-                <TableCell align="right" className="font-bold">
-                  Interest
-                </TableCell>
-                <TableCell align="right" className="font-bold">
-                  Total
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {bill?.info.items.map((items: BillItem, index: any) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell component="th" scope="row" className="uppercase">
-                    {items.lobname} - {items.account}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Currency amount={items.amount} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Currency amount={items.surcharge} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Currency amount={items.interest} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <Currency amount={items.total} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+          Pay option
+        </Button>
+        <Table
+          columns={columns}
+          items={props.formValues.bill?.items || []}
+          totalAmountDue={props.formValues.bill?.amount}
+          amountCaption="Bill Amount :"
+        />
         <Modal open={open} onClose={handleOpen}>
           <Box className="fixed flex flex-col items-center justify-start top-1/2 left-1/2 w-64 h-52 bg-white shadow-xl p-4 transform -translate-x-1/2 -translate-y-1/2 rounded-sm ">
             <Typography variant="h6" component="h2" className="pb-5">
@@ -227,16 +190,9 @@ const BillingInfo = (props: any) => {
             </Box>
           </Box>
         </Modal>
-        <div className="pr-5 pt-2">
-          <div className="flex justify-end items-center gap-5">
-            <div className="font-bold uppercase">Bill Amount</div>
-            <div className="font-bold">
-              <Currency currency="Php" amount={bill?.info.amount ?? 0} />
-            </div>
-          </div>
-        </div>
       </div>
-      <ActionBar>
+      <ActionBar className="justify-between mt-14 relative">
+        <div className=" bg-gray-300 absolute bottom-14 h-[1px] w-full" />
         <Button
           onClick={props.onCancel}
           variant="text"
@@ -244,7 +200,7 @@ const BillingInfo = (props: any) => {
         >
           Back
         </Button>
-        <Button onClick={props.onSubmit}>Next</Button>
+        <Button onClick={props.onSubmit}>Confirm Payment</Button>
       </ActionBar>
     </Card>
   );

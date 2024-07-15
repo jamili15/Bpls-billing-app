@@ -10,7 +10,7 @@ import RefAccount from "@/components/RefNo";
 import { useEffect } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const { partner, setId, resources } = usePartnerContext();
+  const { partner, setId, resources, id } = usePartnerContext();
   let moduleTitle = "Business Online Billing and Payment";
 
   useEffect(() => {
@@ -20,11 +20,11 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [setId]);
 
   const pages = [
-    {
-      name: "Email Verification",
-      caption: "Email Verification",
-      Component: EmailVerification,
-    },
+    // {
+    //   name: "Email Verification",
+    //   caption: "Email Verification",
+    //   Component: EmailVerification,
+    // },
     {
       name: "Ref no",
       caption: "Initial Information",
@@ -42,7 +42,11 @@ export default function Page({ params }: { params: { id: string } }) {
     },
   ];
   return (
-    <MasterLayout lgucaption={partner?.title} lguLogo={resources}>
+    <MasterLayout
+      lgucaption={partner?.title}
+      lguLogo={resources}
+      href={`http://192.168.2.9:90/partners/${id}`}
+    >
       <PageFlow title={moduleTitle} pages={pages} />
     </MasterLayout>
   );
