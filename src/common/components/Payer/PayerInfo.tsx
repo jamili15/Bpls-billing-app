@@ -60,8 +60,6 @@ const PayerInfo = (props: any) => {
     });
   };
 
-  console.log("BILL", bill);
-
   return (
     <Card
       title={props.title}
