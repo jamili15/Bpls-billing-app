@@ -15,7 +15,7 @@ const MasterLayout: React.FC<HomeProps> = ({
   lguLogo,
 }) => {
   const { id } = usePartnerContext();
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_FILIPIZEN_URL;
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F5]">
